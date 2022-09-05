@@ -12,6 +12,7 @@ public class Application extends javafx.application.Application {
         FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("hello-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 320, 240);
         stage.setTitle("Lazy Lunch");
+        stage.setMaximized(true);
         stage.setScene(scene);
         stage.show();
     }

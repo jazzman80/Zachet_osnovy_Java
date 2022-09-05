@@ -1,8 +1,10 @@
 package com.example.zachet_osnovy_java;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -42,16 +44,16 @@ public class Controller {
             connection.disconnect();
 
             ObjectMapper objectMapper = new ObjectMapper();
-            LinkedList<Meal> mealList = new LinkedList<Meal>();
-
-            mealList = objectMapper.readValue(content.toString(), new TypeReference<LinkedList<Meal>>(){});
-            System.out.println(mealList);
-
-            System.out.println(mealList.get(0).strMeal);
-            //name.setText(jsonNode.get("strMeal").asText());
-            //instructions.setText(jsonNode.get("strInstructions").asText());
-            //Image image = new Image(jsonNode.get("strMealThumb").asText());
-            //imageView.setImage(image);
+            objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            JsonNode node = objectMapper.readTree(content.toString()).get("meals");
+            if(node.isArray()){
+                for (final JsonNode objNode: node){
+                    name.setText(objNode.get("strMeal").asText());
+                    instructions.setText(objNode.get("strInstructions").asText());
+                    Image image = new Image(objNode.get("strMealThumb").asText());
+                    imageView.setImage(image);
+                }
+            }
         }
         catch (Exception exception){
             exception.getStackTrace();
